@@ -26,6 +26,83 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netdb.h>
+
+#define PORT 1153
+#define BUFSIZE 2048
+
+int SetupSocket()
+{
+    int fd;
+    
+    short int myport = 9999;
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("cannot create socket");
+        return 1;
+    }
+    
+    struct sockaddr_in myaddr;
+
+    /* bind to an arbitrary return address */
+    /* because this is the client side, we don't care about the address */
+    /* since no application will initiate communication here - it will */
+    /* just send responses */
+    /* INADDR_ANY is the IP address and 0 is the socket */
+    /* htonl converts a long integer (e.g. address) to a network representation */
+    /* htons converts a short integer (e.g. port) to a network representation */
+
+    memset((char *)&myaddr, 0, sizeof(myaddr));
+    myaddr.sin_family = AF_INET;
+    myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    myaddr.sin_port = htons(myport);
+
+    if (bind(fd, (struct sockaddr *)&myaddr, sizeof(myaddr)) < 0) {
+        perror("bind failed");
+        return 1;
+    }
+    
+    
+    
+    int port = 8888;
+    
+    struct hostent *hp;     /* host information */
+    struct sockaddr_in servaddr;    /* server address */
+    char *my_message = "this is a test message";
+
+    /* fill in the server's address and data */
+    memset((char*)&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(port);
+
+    
+    char *host = "google.com";
+    /* look up the address of the server given its name */
+    hp = gethostbyname(host);
+    if (!hp) {
+        fprintf(stderr, "could not obtain address of %s\n", host);
+        return 0;
+    }
+
+    /* put the host's address into the server address structure */
+    memcpy((void *)&servaddr.sin_addr, hp->h_addr_list[0], hp->h_length);
+
+    /* send a message to the server */
+    if (sendto(fd, my_message, strlen(my_message), 0, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
+        perror("sendto failed");
+        return 1;
+    }
+    
+
+    return 0;
+}
+
+int result = SetupSocket();
+
 
 float windowHeight = 800.0f;
 float windowWidth = 1300.0f;
@@ -60,6 +137,51 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main(void)
 {
+    
+    
+    
+    struct sockaddr_in myaddr;      /* our address */
+    struct sockaddr_in remaddr;     /* remote address */
+    socklen_t addrlen = sizeof(remaddr);            /* length of addresses */
+    int recvlen;                    /* # bytes received */
+    int fd;                         /* our socket */
+    unsigned char buf[BUFSIZE];     /* receive buffer */
+
+    /* create a UDP socket */
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+            perror("cannot create socket\n");
+            return 1;
+    }
+
+    /* bind the socket to any valid IP address and a specific port */
+
+    memset((char *)&myaddr, 0, sizeof(myaddr));
+    myaddr.sin_family = AF_INET;
+    myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    myaddr.sin_port = htons(PORT);
+
+    if (bind(fd, (struct sockaddr *)&myaddr, sizeof(myaddr)) < 0) {
+            perror("bind failed");
+            return 1;
+    }
+
+    /* now loop, receiving data and printing what we received */
+    for (;;) {
+            printf("waiting on port %d\n", PORT);
+            recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
+            printf("received %d bytes\n", recvlen);
+            if (recvlen > 0) {
+                    buf[recvlen] = 0;
+                    printf("received message: \"%s\"\n", buf);
+            }
+    }
+    
+    
+    
+    
+    
+    
     GLFWwindow* window;
 
     // Initialize the library
