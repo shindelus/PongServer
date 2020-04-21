@@ -2,7 +2,6 @@
 #include <string>
 #include "ball.h"
 #include "paddle.h"
-#include "vertices.h"
 
 
 class Game
@@ -12,26 +11,11 @@ public:
     int player2Score;
     int level;
     int angleChangeCountdown;
-    float compDelay;
-    float currentCompDelay;
     float windowHeight;
     float windowWidth;
     float countDownToStart;
-    float rIncrement;
-    float gIncrement;
-    float bIncrement;
-    float red;
-    float green;
-    float blue;
-    float redHi;
-    float redLo;
-    float blueHi;
-    float blueLo;
-    float greenHi;
-    float greenLo;
     int curveCountdown;
     std::string message;
-    bool compWaiting;
     bool curve;
     bool clockWiseCurve;
     bool levelUp;
@@ -57,12 +41,7 @@ public:
     void OnUpdate(Paddle& p1, Paddle& p2, Ball& b);
     void MovePaddleUp(Paddle& p);
     void MovePaddleDown(Paddle& p);
-    void MoveComputerPaddle(Paddle& p, Ball& b);
     void MoveBall(Paddle& p1, Paddle& p2, Ball& b);
     void CheckBallDirection(Ball& b);
-    void AddText(Vertices& v);
-    void CreateBall(float left, float bottom, float width, float height, Vertices& v);
-    void UpdateColor();
-    void ChangeColor();
     void CheckPaddleMovement(Paddle& p);
 };

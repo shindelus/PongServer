@@ -7,17 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DE573444244D3BC1002112E7 /* vertexbuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573426244D3BBF002112E7 /* vertexbuffer.cpp */; };
-		DE573445244D3BC1002112E7 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573427244D3BBF002112E7 /* helpers.cpp */; };
-		DE573446244D3BC1002112E7 /* letters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573429244D3BBF002112E7 /* letters.cpp */; };
-		DE573447244D3BC1002112E7 /* indexbuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE57342B244D3BBF002112E7 /* indexbuffer.cpp */; };
-		DE573448244D3BC1002112E7 /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE57342F244D3BC0002112E7 /* renderer.cpp */; };
-		DE573449244D3BC1002112E7 /* word.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573431244D3BC0002112E7 /* word.cpp */; };
 		DE57344A244D3BC1002112E7 /* paddle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573433244D3BC0002112E7 /* paddle.cpp */; };
 		DE57344B244D3BC1002112E7 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573434244D3BC0002112E7 /* game.cpp */; };
-		DE57344C244D3BC1002112E7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573435244D3BC0002112E7 /* shader.cpp */; };
-		DE57344D244D3BC1002112E7 /* vertices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE57343C244D3BC0002112E7 /* vertices.cpp */; };
-		DE57344E244D3BC1002112E7 /* vertexarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE57343E244D3BC1002112E7 /* vertexarray.cpp */; };
 		DE57344F244D3BC1002112E7 /* ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE573440244D3BC1002112E7 /* ball.cpp */; };
 		DE573452244D3C15002112E7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE573451244D3C15002112E7 /* OpenGL.framework */; };
 		DE573454244D3C3B002112E7 /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DE573453244D3C3B002112E7 /* libglfw.3.dylib */; };
@@ -38,36 +29,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DE573426244D3BBF002112E7 /* vertexbuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexbuffer.cpp; sourceTree = "<group>"; };
-		DE573427244D3BBF002112E7 /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
-		DE573428244D3BBF002112E7 /* glew */ = {isa = PBXFileReference; lastKnownFileType = folder; path = glew; sourceTree = "<group>"; };
-		DE573429244D3BBF002112E7 /* letters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = letters.cpp; sourceTree = "<group>"; };
-		DE57342A244D3BBF002112E7 /* vertexarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexarray.h; sourceTree = "<group>"; };
-		DE57342B244D3BBF002112E7 /* indexbuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = indexbuffer.cpp; sourceTree = "<group>"; };
 		DE57342C244D3BBF002112E7 /* ball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ball.h; sourceTree = "<group>"; };
-		DE57342D244D3BBF002112E7 /* glm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = glm; sourceTree = "<group>"; };
-		DE57342E244D3BBF002112E7 /* basic.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basic.shader; sourceTree = "<group>"; };
-		DE57342F244D3BC0002112E7 /* renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = renderer.cpp; sourceTree = "<group>"; };
-		DE573430244D3BC0002112E7 /* vertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertices.h; sourceTree = "<group>"; };
-		DE573431244D3BC0002112E7 /* word.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = word.cpp; sourceTree = "<group>"; };
-		DE573432244D3BC0002112E7 /* renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer.h; sourceTree = "<group>"; };
 		DE573433244D3BC0002112E7 /* paddle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paddle.cpp; sourceTree = "<group>"; };
 		DE573434244D3BC0002112E7 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
-		DE573435244D3BC0002112E7 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		DE573436244D3BC0002112E7 /* paddle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paddle.h; sourceTree = "<group>"; };
-		DE573437244D3BC0002112E7 /* vertexbufferlayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexbufferlayout.h; sourceTree = "<group>"; };
-		DE573438244D3BC0002112E7 /* indexbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = indexbuffer.h; sourceTree = "<group>"; };
-		DE573439244D3BC0002112E7 /* letters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = letters.h; sourceTree = "<group>"; };
-		DE57343A244D3BC0002112E7 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
-		DE57343B244D3BC0002112E7 /* vertexbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexbuffer.h; sourceTree = "<group>"; };
-		DE57343C244D3BC0002112E7 /* vertices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertices.cpp; sourceTree = "<group>"; };
-		DE57343D244D3BC1002112E7 /* glfw */ = {isa = PBXFileReference; lastKnownFileType = folder; path = glfw; sourceTree = "<group>"; };
-		DE57343E244D3BC1002112E7 /* vertexarray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexarray.cpp; sourceTree = "<group>"; };
 		DE57343F244D3BC1002112E7 /* game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = game.h; sourceTree = "<group>"; };
 		DE573440244D3BC1002112E7 /* ball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ball.cpp; sourceTree = "<group>"; };
 		DE573441244D3BC1002112E7 /* Debug */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Debug; sourceTree = "<group>"; };
-		DE573442244D3BC1002112E7 /* word.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = word.h; sourceTree = "<group>"; };
-		DE573443244D3BC1002112E7 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 		DE573451244D3C15002112E7 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DE573453244D3C3B002112E7 /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "PongServer/glfw/lib-macos/libglfw.3.dylib"; sourceTree = "<group>"; };
 		DE573455244D3C53002112E7 /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = PongServer/glew/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
@@ -121,34 +89,11 @@
 			children = (
 				DE573440244D3BC1002112E7 /* ball.cpp */,
 				DE57342C244D3BBF002112E7 /* ball.h */,
-				DE57342E244D3BBF002112E7 /* basic.shader */,
 				DE573441244D3BC1002112E7 /* Debug */,
 				DE573434244D3BC0002112E7 /* game.cpp */,
 				DE57343F244D3BC1002112E7 /* game.h */,
-				DE573428244D3BBF002112E7 /* glew */,
-				DE57343D244D3BC1002112E7 /* glfw */,
-				DE57342D244D3BBF002112E7 /* glm */,
-				DE573427244D3BBF002112E7 /* helpers.cpp */,
-				DE57343A244D3BC0002112E7 /* helpers.h */,
-				DE57342B244D3BBF002112E7 /* indexbuffer.cpp */,
-				DE573438244D3BC0002112E7 /* indexbuffer.h */,
-				DE573429244D3BBF002112E7 /* letters.cpp */,
-				DE573439244D3BC0002112E7 /* letters.h */,
 				DE573433244D3BC0002112E7 /* paddle.cpp */,
 				DE573436244D3BC0002112E7 /* paddle.h */,
-				DE57342F244D3BC0002112E7 /* renderer.cpp */,
-				DE573432244D3BC0002112E7 /* renderer.h */,
-				DE573435244D3BC0002112E7 /* shader.cpp */,
-				DE573443244D3BC1002112E7 /* shader.h */,
-				DE57343E244D3BC1002112E7 /* vertexarray.cpp */,
-				DE57342A244D3BBF002112E7 /* vertexarray.h */,
-				DE573426244D3BBF002112E7 /* vertexbuffer.cpp */,
-				DE57343B244D3BC0002112E7 /* vertexbuffer.h */,
-				DE573437244D3BC0002112E7 /* vertexbufferlayout.h */,
-				DE57343C244D3BC0002112E7 /* vertices.cpp */,
-				DE573430244D3BC0002112E7 /* vertices.h */,
-				DE573431244D3BC0002112E7 /* word.cpp */,
-				DE573442244D3BC1002112E7 /* word.h */,
 				DE9F3734244D3A4F00B31358 /* main.cpp */,
 			);
 			path = PongServer;
@@ -211,19 +156,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE57344C244D3BC1002112E7 /* shader.cpp in Sources */,
-				DE573447244D3BC1002112E7 /* indexbuffer.cpp in Sources */,
 				DE9F3735244D3A4F00B31358 /* main.cpp in Sources */,
-				DE57344D244D3BC1002112E7 /* vertices.cpp in Sources */,
 				DE57344B244D3BC1002112E7 /* game.cpp in Sources */,
-				DE57344E244D3BC1002112E7 /* vertexarray.cpp in Sources */,
-				DE573445244D3BC1002112E7 /* helpers.cpp in Sources */,
-				DE573444244D3BC1002112E7 /* vertexbuffer.cpp in Sources */,
-				DE573448244D3BC1002112E7 /* renderer.cpp in Sources */,
 				DE57344A244D3BC1002112E7 /* paddle.cpp in Sources */,
 				DE57344F244D3BC1002112E7 /* ball.cpp in Sources */,
-				DE573446244D3BC1002112E7 /* letters.cpp in Sources */,
-				DE573449244D3BC1002112E7 /* word.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
