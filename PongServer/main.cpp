@@ -58,19 +58,28 @@ int main(void)
     /* main loop */
     for (;;)
     {
+        // Wait for Client
+        printf("waiting on port %d\n", PORT);
+        recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
+        printf("received %ld bytes\n", recvlen);
+        if (recvlen > 0) {
+            buf[recvlen] = 0;
+            printf("%f\n", buf[0]);
+        }
+        
+        // Update game state
+        paddle2.Yposition = buf[0];
         game.OnUpdate(paddle1, paddle2, ball);
         printf("ball X - %f\n", ball.Xposition);
         printf("ball Y - %f\n", ball.Yposition);
         printf("countdown - %f\n", game.countDownToStart);
 
         
-        printf("waiting on port %d\n", PORT);
-        recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
-        printf("received %ld bytes\n", recvlen);
-        if (recvlen > 0) {
-                buf[recvlen] = 0;
-            printf("%f\n", buf[0]);
-        }
+        buf[0] = ball.Xposition;
+        buf[1] = ball.Yposition;
+        buf[2] = 0;
+        
+        // Send new state to client
         if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
         perror("sendto");
     }
