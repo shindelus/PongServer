@@ -11,7 +11,7 @@
 #include <netdb.h>
 
 #define PORT 1153
-#define BUFSIZE 2048
+#define BUFSIZE 40
 
 #include "ball.h"
 #include "paddle.h"
@@ -54,6 +54,12 @@ int main(void)
             perror("bind failed");
             return 1;
     }
+    
+    
+    struct sockaddr * addr1 = nullptr;
+    struct sockaddr * addr2 = nullptr;
+    
+    float buf2[BUFSIZE];     /* receive buffer */
 
     /* main loop */
     for (;;)
@@ -61,26 +67,71 @@ int main(void)
         // Wait for Client
         printf("waiting on port %d\n", PORT);
         recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
-        printf("received %ld bytes\n", recvlen);
-        if (recvlen > 0) {
-            buf[recvlen] = 0;
-            printf("%f\n", buf[0]);
+//        printf("received %ld bytes\n", recvlen);
+        
+        if (addr1 == nullptr)
+        {
+            addr1 = (struct sockaddr *)&remaddr;
+            printf("ADDRESS ONE ASSIGNED!!");
+        }
+        else if (addr2 == nullptr)
+        {
+            addr2 = (struct sockaddr *)&remaddr;
+            printf("ADDRESS TWO ASSIGNED!!");
         }
         
-        // Update game state
-        paddle2.Yposition = buf[0];
-        game.OnUpdate(paddle1, paddle2, ball);
-        printf("ball X - %f\n", ball.Xposition);
-        printf("ball Y - %f\n", ball.Yposition);
-        printf("countdown - %f\n", game.countDownToStart);
-
-        
-        buf[0] = ball.Xposition;
-        buf[1] = ball.Yposition;
-        buf[2] = 0;
-        
-        // Send new state to client
-        if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
-        perror("sendto");
+//        if (addr1 != nullptr && addr2 != nullptr)
+        if (true)
+        {
+            if (recvlen > 0) {
+                buf[recvlen] = 0;
+    //            printf("%f\n", buf[0]);
+            }
+            if (buf[0] == 1.0f)
+                game.needLevelScoreUpdate = true;
+            paddle1.Yposition = buf[1];
+            paddle2.Yposition = buf[2];
+                    
+            // Update game state
+            game.OnUpdate(paddle1, paddle2, ball);
+            
+            if (game.needLevelScoreUpdate)
+            {
+                buf[0] = 1;
+                buf[1] = game.player1Score;
+                buf[2] = game.player2Score;
+                buf[3] = game.level;
+                buf[4] = game.messageNum;
+                game.needLevelScoreUpdate = false;
+            } else {
+                buf[0] = 0;
+                buf[1] = ball.Xposition;
+                buf[2] = ball.Yposition;
+            }
+            
+            
+//            buf2[0] = 2;
+//            buf2[1] = paddle1.Yposition;
+//            buf2[2] = paddle2.Yposition;
+            
+            // Send new state to clients
+            
+            if (addr1 == (struct sockaddr *)&remaddr)
+            {
+                if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+                perror("sendto");
+                
+//                if (sendto(fd, buf2, BUFSIZE, 0, addr2, addrlen) < 0)
+//                perror("sendto");
+                
+            } else if (addr2 == (struct sockaddr *)&remaddr)
+            {
+                if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+                perror("sendto");
+                
+//                if (sendto(fd, buf2, BUFSIZE, 0, addr1, addrlen) < 0)
+//                perror("sendto");
+            }
+        }
     }
 }

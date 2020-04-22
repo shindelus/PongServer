@@ -245,6 +245,62 @@ void Game::MoveBall(Paddle& p1, Paddle& p2, Ball& b)
     }
 };
 
+void Game::CheckMessage()
+{
+    if (p1Scored && !lost)
+    {
+        messageNum = 5;
+        p1Scored = false;
+        countDownToStart = 300.0f;
+    }
+    if (p2Scored && !levelUp)
+    {
+        messageNum = 6;
+        p2Scored = false;
+        countDownToStart = 300.0f;
+    }
+    if (lost)
+    {
+        messageNum = 7;
+        lost = false;
+        countDownToStart = 300.0f;
+    }
+    if (levelUp)
+    {
+        messageNum = 8;
+        levelUp = false;
+        countDownToStart = 300.0f;
+    }
+
+    
+    if (countDownToStart > 200.0f && countDownToStart <= 300.0f)
+    {
+        levelUp = false;
+        p1Scored = false;
+        p2Scored = false;
+        lost = false;
+    }
+    if (countDownToStart > 150.0f && countDownToStart <= 200.0f)
+    {
+        messageNum = 1;
+
+    } else if (countDownToStart > 100.0f && countDownToStart <= 150.0f)
+    {
+        messageNum = 2;
+
+    } else if (countDownToStart > 50.0f && countDownToStart <= 100.0f)
+    {
+        messageNum = 3;
+
+    } else if (countDownToStart > 0.0f && countDownToStart <= 50.0f)
+    {
+        messageNum = 4;
+    } else if (countDownToStart == 0)
+    {
+        messageNum = 0;
+    }
+}
+
 void Game::ResetLevel(Paddle& p1, Paddle& p2, Ball& b)
 {
     p1.Yposition = (windowHeight/2.0f) - 70.0f;
@@ -256,6 +312,7 @@ void Game::ResetLevel(Paddle& p1, Paddle& p2, Ball& b)
     b.Yspeed = b.speed * b.Yangle[b.direction];
     curve = false;
     clockWiseCurve = false;
+    needLevelScoreUpdate = true;
 };
 
 void Game::ResetGame(Paddle& p1, Paddle& p2, Ball& b)
@@ -263,8 +320,8 @@ void Game::ResetGame(Paddle& p1, Paddle& p2, Ball& b)
     player1Score = 0;
     player2Score = 0;
     level = 1;
-    ResetLevel(p1, p2, b);
     countDownToStart = 200.0f;
+    ResetLevel(p1, p2, b);
 };
 
 void Game::CheckPaddleMovement(Paddle& p)
@@ -288,6 +345,7 @@ void Game::OnUpdate(Paddle& p1, Paddle& p2, Ball& b)
         CheckForCollisions(p1, p2, b);
         MoveBall(p1, p2, b);
     }
+    CheckMessage();
 };
 
 Game::Game(float& wH, float& wW)
@@ -304,4 +362,6 @@ Game::Game(float& wH, float& wW)
     lost = false;
     p1Scored = false;
     p2Scored = false;
+    needLevelScoreUpdate = true;
+    messageNum = 0;
 }

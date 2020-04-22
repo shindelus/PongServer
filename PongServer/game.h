@@ -11,17 +11,18 @@ public:
     int player2Score;
     int level;
     int angleChangeCountdown;
+    int curveCountdown;
     float windowHeight;
     float windowWidth;
     float countDownToStart;
-    int curveCountdown;
-    std::string message;
+    float messageNum;
     bool curve;
     bool clockWiseCurve;
     bool levelUp;
     bool lost;
     bool p1Scored;
     bool p2Scored;
+    bool needLevelScoreUpdate;
     
     Game(float& wH, float& wW);
     ~Game(){};
@@ -44,4 +45,5 @@ public:
     void MoveBall(Paddle& p1, Paddle& p2, Ball& b);
     void CheckBallDirection(Ball& b);
     void CheckPaddleMovement(Paddle& p);
+    void CheckMessage();
 };
