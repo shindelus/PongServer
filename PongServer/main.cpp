@@ -17,7 +17,6 @@
 #include "paddle.h"
 #include "game.h"
 
-
 int main(void)
 {
     
@@ -56,10 +55,10 @@ int main(void)
     }
     
     
-    struct sockaddr * addr1 = nullptr;
-    struct sockaddr * addr2 = nullptr;
+    float hostIP1 = 0.0f;
+    float hostIP2 = 0.0f;
     
-    float buf2[BUFSIZE];     /* receive buffer */
+//    float buf2[BUFSIZE];     /* receive buffer */
 
     /* main loop */
     for (;;)
@@ -67,71 +66,64 @@ int main(void)
         // Wait for Client
         printf("waiting on port %d\n", PORT);
         recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
-//        printf("received %ld bytes\n", recvlen);
         
-        if (addr1 == nullptr)
+        if (hostIP1 == 0.0f && buf[0] > 9.0f && buf[1] == 0)
         {
-            addr1 = (struct sockaddr *)&remaddr;
-            printf("ADDRESS ONE ASSIGNED!!");
+            hostIP1 = buf[0];
+            printf("ADDRESS ONE ASSIGNED!!\n");
+            buf[0] = 3.0f;
+
+            if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+            perror("sendto");
+
         }
-        else if (addr2 == nullptr)
+        else if (hostIP2 == 0.0f && buf[0] != hostIP1 && buf[0] > 9.0f)
         {
-            addr2 = (struct sockaddr *)&remaddr;
-            printf("ADDRESS TWO ASSIGNED!!");
+            hostIP2 = buf[0];
+            printf("ADDRESS TWO ASSIGNED!!\n");
+            buf[0] = 4.0f;  // Waiting for opponent
+
+
+            if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+            perror("sendto");
+
         }
-        
-//        if (addr1 != nullptr && addr2 != nullptr)
-        if (true)
+        else if (hostIP2 == 0.0f && hostIP1 != 0.0f)
         {
-            if (recvlen > 0) {
-                buf[recvlen] = 0;
-    //            printf("%f\n", buf[0]);
-            }
-            if (buf[0] == 1.0f)
-                game.needLevelScoreUpdate = true;
-            paddle1.Yposition = buf[1];
-            paddle2.Yposition = buf[2];
-                    
+            buf[0] = 0;  // Waiting for opponent
+
+            if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+            perror("sendto");
+        } else if (hostIP1 != 0.0f && hostIP2 != 0.0f)
+        {
+            printf("Play Game!!\n");
+            
+            if (buf[1] == 1.0f && hostIP1 == buf[0])
+                paddle1.Yposition = buf[2];
+            else if (buf[1] == 1.0f && hostIP2 == buf[0])
+                paddle2.Yposition = buf[2];
+
             // Update game state
             game.OnUpdate(paddle1, paddle2, ball);
-            
-            if (game.needLevelScoreUpdate)
+
+            if (buf[1] == 1.0f)
             {
-                buf[0] = 1;
-                buf[1] = game.player1Score;
-                buf[2] = game.player2Score;
-                buf[3] = game.level;
-                buf[4] = game.messageNum;
-                game.needLevelScoreUpdate = false;
-            } else {
-                buf[0] = 0;
+                buf[0] = 1.0f;
                 buf[1] = ball.Xposition;
                 buf[2] = ball.Yposition;
+                buf[3] = paddle1.Yposition;
+                buf[4] = paddle2.Yposition;
+            } else if (buf[1] == 2.0f)
+            {
+                buf[0] = 2.0f;
+                buf[1] = game.player1Score;
+                buf[2] = game.player2Score;
+                buf[3] = game.messageNum;
+                game.needLevelScoreUpdate = false;
             }
             
-            
-//            buf2[0] = 2;
-//            buf2[1] = paddle1.Yposition;
-//            buf2[2] = paddle2.Yposition;
-            
-            // Send new state to clients
-            
-            if (addr1 == (struct sockaddr *)&remaddr)
-            {
-                if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
-                perror("sendto");
-                
-//                if (sendto(fd, buf2, BUFSIZE, 0, addr2, addrlen) < 0)
-//                perror("sendto");
-                
-            } else if (addr2 == (struct sockaddr *)&remaddr)
-            {
-                if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
-                perror("sendto");
-                
-//                if (sendto(fd, buf2, BUFSIZE, 0, addr1, addrlen) < 0)
-//                perror("sendto");
-            }
+            if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
+            perror("sendto");
         }
     }
 }
