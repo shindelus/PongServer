@@ -216,25 +216,21 @@ void Game::MoveBall(Paddle& p1, Paddle& p2, Ball& b)
     {
         player2Score++;
         p2Scored = true;
-        if (player2Score == 7)
+        if (player2Score == 21)
         {
-            level++;
-            player1Score = 0;
-            player2Score = 0;
-            levelUp = true;
-            b.speed = b.speed + 2.0f;
-            player2Score = 0;
+            p1Lost = true;
+            ResetGame(p1, p2, b);
+        } else {
+            ResetLevel(p1, p2, b);
         }
-        ResetLevel(p1, p2, b);
         
     } else if (BallIsOutRight(b))
     {
         player1Score++;
         p1Scored = true;
-        if (player1Score == 7)
+        if (player1Score == 21)
         {
-            level = 1;
-            lost = true;
+            p2Lost = true;
             ResetGame(p1, p2, b);
         } else {
             ResetLevel(p1, p2, b);
@@ -247,38 +243,36 @@ void Game::MoveBall(Paddle& p1, Paddle& p2, Ball& b)
 
 void Game::CheckMessage()
 {
-    if (p1Scored && !lost)
+    if (p1Scored)
     {
-        messageNum = 5;
+        messageNum = 5.0f;
         p1Scored = false;
-        countDownToStart = 300.0f;
+        countdownToPause = 100.0f;
     }
-    if (p2Scored && !levelUp)
+    if (p2Scored)
     {
-        messageNum = 6;
+        messageNum = 6.0f;
         p2Scored = false;
-        countDownToStart = 300.0f;
+        countdownToPause = 100.0f;
     }
-    if (lost)
+    if (p1Lost)
     {
-        messageNum = 7;
-        lost = false;
-        countDownToStart = 300.0f;
+        messageNum = 7.0f;
+        p1Lost = false;
+        countdownToPause = 100.0f;
     }
-    if (levelUp)
+    if (p2Lost)
     {
-        messageNum = 8;
-        levelUp = false;
-        countDownToStart = 300.0f;
+        messageNum = 8.0f;
+        p2Lost = false;
+        countdownToPause = 100.0f;
     }
 
     
-    if (countDownToStart > 200.0f && countDownToStart <= 300.0f)
+    if (countdownToPause > 0.0f && countdownToPause <= 100.0f)
     {
-        levelUp = false;
         p1Scored = false;
         p2Scored = false;
-        lost = false;
     }
     if (countDownToStart > 150.0f && countDownToStart <= 200.0f)
     {
@@ -308,19 +302,24 @@ void Game::ResetLevel(Paddle& p1, Paddle& p2, Ball& b)
     b.Xposition = 100.0f;
     b.Yposition = 387.5f;
     b.direction = 10;
+    b.speed = 20.0f;
     b.Xspeed = b.speed * b.Xangle[b.direction];
     b.Yspeed = b.speed * b.Yangle[b.direction];
     curve = false;
     clockWiseCurve = false;
-    needLevelScoreUpdate = true;
+    speedUpCountdown = 300.0f;
+    p1paused = false;
+    p2paused = false;
+    playing = 0.0f;
+    resetting = true;
+    countdownToPause = 100.0f;
+    countDownToStart = 200.0f;
 };
 
 void Game::ResetGame(Paddle& p1, Paddle& p2, Ball& b)
 {
     player1Score = 0;
     player2Score = 0;
-    level = 1;
-    countDownToStart = 200.0f;
     ResetLevel(p1, p2, b);
 };
 
@@ -337,31 +336,61 @@ void Game::CheckPaddleMovement(Paddle& p)
 
 void Game::OnUpdate(Paddle& p1, Paddle& p2, Ball& b)
 {
-    CheckPaddleMovement(p2);
+    if (countdownToPause != 0 && inProcessOfPause)
+    {
+        countdownToPause = countdownToPause - 1.0f;
+    } else if (countdownToPause == 0 && inProcessOfPause)
+    {
+        p1paused = true;
+        p2paused = true;
+        inProcessOfPause = false;
+    }
+    if (p1paused || p2paused)
+    {
+        playing = 0.0f;
+        return;
+    }
     if (countDownToStart != 0)
     {
         countDownToStart--;
     } else {
+        if (playing == 0.0f)
+            playing = 1.0f;
+        if (speedUpCountdown == 0)
+        {
+            b.speed = b.speed + 2.0f;
+            speedUpCountdown = 300.0f;
+        } else {
+            speedUpCountdown = speedUpCountdown - 1.0f;
+        }
         CheckForCollisions(p1, p2, b);
         MoveBall(p1, p2, b);
     }
     CheckMessage();
+    printf("SPEED IS %f\n", b.speed);
 };
 
 Game::Game(float& wH, float& wW)
 {
     player1Score = 0;
     player2Score = 0;
-    level = 1;
     windowHeight = wH;
     windowWidth = wW;
     countDownToStart = 200.0f;
     curve = false;
     clockWiseCurve = false;
-    levelUp = false;
-    lost = false;
+    p1Lost = false;
+    p2Lost = false;
     p1Scored = false;
     p2Scored = false;
-    needLevelScoreUpdate = true;
     messageNum = 0;
+    speedUpCountdown = 300.0f;
+    playing = 0.0f;
+    p1paused = true;
+    p2paused = true;
+    p1waiting = false;
+    p2waiting = false;
+    resetting = false;
+    countdownToPause = 100.0f;
+    inProcessOfPause = false;
 }

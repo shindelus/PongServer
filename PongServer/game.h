@@ -9,20 +9,27 @@ class Game
 public:
     int player1Score;
     int player2Score;
-    int level;
     int angleChangeCountdown;
     int curveCountdown;
     float windowHeight;
     float windowWidth;
     float countDownToStart;
     float messageNum;
+    float speedUpCountdown;
+    float playing;
+    float countdownToPause;
     bool curve;
     bool clockWiseCurve;
-    bool levelUp;
-    bool lost;
+    bool p1Lost;
+    bool p2Lost;
     bool p1Scored;
     bool p2Scored;
-    bool needLevelScoreUpdate;
+    bool p1paused;
+    bool p2paused;
+    bool p1waiting;
+    bool p2waiting;
+    bool resetting;
+    bool inProcessOfPause;
     
     Game(float& wH, float& wW);
     ~Game(){};

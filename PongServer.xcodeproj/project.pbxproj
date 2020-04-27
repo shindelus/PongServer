@@ -284,6 +284,7 @@
 					"$(PROJECT_DIR)/PongServer/glfw/lib-macos",
 					"$(PROJECT_DIR)/PongServer/glew/lib",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -297,6 +298,7 @@
 					"$(PROJECT_DIR)/PongServer/glfw/lib-macos",
 					"$(PROJECT_DIR)/PongServer/glew/lib",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

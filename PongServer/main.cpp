@@ -9,9 +9,11 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netdb.h>
+#include <sys/timeb.h>
+
 
 #define PORT 1153
-#define BUFSIZE 40
+#define BUFSIZE 128
 
 #include "ball.h"
 #include "paddle.h"
@@ -54,74 +56,125 @@ int main(void)
             return 1;
     }
     
-    
     float hostIP1 = 0.0f;
     float hostIP2 = 0.0f;
     
 //    float buf2[BUFSIZE];     /* receive buffer */
+    timeb tb;
+    ftime(&tb);
+    int beginInterval = tb.millitm + (tb.time & 0xfffff) * 1000;
 
     /* main loop */
     for (;;)
     {
+        
         // Wait for Client
         printf("waiting on port %d\n", PORT);
         recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
         
-        if (hostIP1 == 0.0f && buf[0] > 9.0f && buf[1] == 0)
+        if (hostIP1 == 0.0f && buf[1] == 1000.0f)
         {
             hostIP1 = buf[0];
             printf("ADDRESS ONE ASSIGNED!!\n");
-            buf[0] = 3.0f;
+            
+            buf[0] = 0.0f;
 
             if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
             perror("sendto");
 
         }
-        else if (hostIP2 == 0.0f && buf[0] != hostIP1 && buf[0] > 9.0f)
+        else if (hostIP2 == 0.0f && buf[0] != hostIP1 && buf[1] == 1000.0f)
         {
             hostIP2 = buf[0];
             printf("ADDRESS TWO ASSIGNED!!\n");
-            buf[0] = 4.0f;  // Waiting for opponent
-
-
+            
+            buf[0] = 1.0f;
+            
             if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
             perror("sendto");
 
         }
-        else if (hostIP2 == 0.0f && hostIP1 != 0.0f)
+        else if (hostIP2 == 0.0f && hostIP1 != 0.0f && hostIP1 == buf[0])
         {
             buf[0] = 0;  // Waiting for opponent
 
             if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
             perror("sendto");
+        
         } else if (hostIP1 != 0.0f && hostIP2 != 0.0f)
         {
-            printf("Play Game!!\n");
+            if (buf[0] == hostIP1 && buf[1] == 2000.0f)
+                game.p1paused = false;
             
-            if (buf[1] == 1.0f && hostIP1 == buf[0])
-                paddle1.Yposition = buf[2];
-            else if (buf[1] == 1.0f && hostIP2 == buf[0])
-                paddle2.Yposition = buf[2];
-
-            // Update game state
-            game.OnUpdate(paddle1, paddle2, ball);
-
-            if (buf[1] == 1.0f)
+            if (buf[0] == hostIP2 && buf[1] == 2000.0f)
+                game.p2paused = false;
+            
+            if ((hostIP1 == buf[0] && game.p1paused == false && game.p2paused == true) ||
+                (hostIP2 == buf[0] && game.p2paused == false && game.p1paused == true))
             {
-                buf[0] = 1.0f;
-                buf[1] = ball.Xposition;
-                buf[2] = ball.Yposition;
-                buf[3] = paddle1.Yposition;
-                buf[4] = paddle2.Yposition;
-            } else if (buf[1] == 2.0f)
-            {
-                buf[0] = 2.0f;
-                buf[1] = game.player1Score;
-                buf[2] = game.player2Score;
-                buf[3] = game.messageNum;
-                game.needLevelScoreUpdate = false;
+                buf[0] = 0;
             }
-            
+            else if (!game.p1paused && !game.p2paused)
+            {
+                if (buf[1] != 1000.0f && hostIP1 == buf[0])
+                {
+                    paddle1.Yposition = buf[1];
+                }
+                else if (buf[1] != 1000.0f && hostIP2 == buf[0])
+                {
+                    paddle2.Yposition = buf[1];
+                }
+
+                // Update game state
+                
+                timeb tb;
+                ftime(&tb);
+                int current = tb.millitm + (tb.time & 0xfffff) * 1000;
+                
+                if (current - beginInterval > 10)
+                {
+                    beginInterval = current;
+                    game.OnUpdate(paddle1, paddle2, ball);
+                }
+
+                if (buf[1] != 1000.0f)
+                {
+                    
+                    if (buf[0] == hostIP2)
+                    {
+                        printf("Updating Player 2 State ---------------\n");
+                        buf[3] = paddle1.Yposition;
+                    }
+                    else if (buf[0] == hostIP1)
+                    {
+                        printf("Updating Player 1 State ---------------\n");
+                        buf[3] = paddle2.Yposition;
+                    }
+                    
+                    if ((hostIP1 == buf[0] && game.p1paused) ||
+                        (hostIP2 == buf[0] && game.p2paused))
+                    {
+                        buf[10] = 1.0f;
+                    } else {
+                        buf[10] = 0.0f;
+                    }
+                    
+                    buf[0] = 2.0f;
+                    buf[1] = game.player1Score;
+                    buf[2] = game.player2Score;
+                    buf[4] = ball.Xposition;
+                    buf[5] = ball.Yposition;
+                    buf[6] = ball.speed;
+                    buf[7] = ball.direction;
+                    buf[8] = game.messageNum;
+                    buf[9] = game.playing;
+                }
+            } else if ((hostIP1 == buf[0] && game.p1paused) ||
+                (hostIP2 == buf[0] && game.p2paused))
+            {
+                buf[0] = 3.0f;
+            }
+
             if (sendto(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, addrlen) < 0)
             perror("sendto");
         }

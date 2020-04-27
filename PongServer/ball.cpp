@@ -4,7 +4,7 @@
 
 Ball::Ball()
 {
-    speed = 17.0f;
+    speed = 20.0f;
     direction = 10;
     Xspeed = speed * Xangle[direction];
     Yspeed = speed * Yangle[direction];
