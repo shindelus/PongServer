@@ -248,33 +248,32 @@ void Game::CheckMessage()
         messageNum = 5.0f;
         p1Scored = false;
         countdownToPause = 100.0f;
+        return;
     }
     if (p2Scored)
     {
         messageNum = 6.0f;
         p2Scored = false;
         countdownToPause = 100.0f;
+        return;
     }
     if (p1Lost)
     {
         messageNum = 7.0f;
         p1Lost = false;
         countdownToPause = 100.0f;
+        return;
     }
     if (p2Lost)
     {
         messageNum = 8.0f;
         p2Lost = false;
         countdownToPause = 100.0f;
+        return;
     }
 
     
-    if (countdownToPause > 0.0f && countdownToPause <= 100.0f)
-    {
-        p1Scored = false;
-        p2Scored = false;
-    }
-    if (countDownToStart > 150.0f && countDownToStart <= 200.0f)
+    if (countDownToStart > 150.0f && countDownToStart < 200.0f)
     {
         messageNum = 1;
 
@@ -314,6 +313,7 @@ void Game::ResetLevel(Paddle& p1, Paddle& p2, Ball& b)
     resetting = true;
     countdownToPause = 100.0f;
     countDownToStart = 200.0f;
+    inProcessOfPause = true;
 };
 
 void Game::ResetGame(Paddle& p1, Paddle& p2, Ball& b)
@@ -336,6 +336,11 @@ void Game::CheckPaddleMovement(Paddle& p)
 
 void Game::OnUpdate(Paddle& p1, Paddle& p2, Ball& b)
 {
+    if (p1paused || p2paused)
+    {
+        playing = 0.0f;
+        return;
+    }
     if (countdownToPause != 0 && inProcessOfPause)
     {
         countdownToPause = countdownToPause - 1.0f;
@@ -344,13 +349,7 @@ void Game::OnUpdate(Paddle& p1, Paddle& p2, Ball& b)
         p1paused = true;
         p2paused = true;
         inProcessOfPause = false;
-    }
-    if (p1paused || p2paused)
-    {
-        playing = 0.0f;
-        return;
-    }
-    if (countDownToStart != 0)
+    } else if (countDownToStart != 0)
     {
         countDownToStart--;
     } else {
